@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'ionic.service.core', 'ionic.service.analytics', 'starter.controllers', 'starter.directives', 'starter.services', 'starter.controllers', 'btford.socket-io'])
 
-.run(function($ionicPlatform, $ionicAnalytics) {
+.run(function ($ionicPlatform, $ionicAnalytics, $rootScope, $state) {
     $ionicPlatform.ready(function () {
         Ionic.io();
         var push = new Ionic.Push({
@@ -14,6 +14,25 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ionic.service.analyti
             "onNotification": function (notification) {
                 var payload = notification.payload;
                 console.log(notification, payload);
+                navigator.notification.confirm(notification.text, function (btn) {
+                    if (btn === 1) {
+                        if (payload["$state"]) {
+                            if (payload["$state"] == "app.search") {
+                                if (!$rootScope.connected) {
+                                    $rootScope.login();
+                                }
+                                else {
+                                    $state.go(payload["$state"], { nickname: $rootScope.nickname });
+                                }
+                            }
+                            else {
+                                $state.go(payload["$state"], payload["params"]);
+                            }
+                        }
+                        else {
+                        }
+                    }
+                }, notification.title)
             }
         });
 
