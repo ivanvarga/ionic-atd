@@ -1,5 +1,22 @@
-<ion-view view-title="Search">
-  <ion-content>
-    <h1>Search</h1>
-  </ion-content>
+<ion-view view-title="Q&A room" ng-controller="ChatController as chatCtrl">
+    <ion-content has-bouncing="true" class="content">
+        <div ng-show="chatCtrl.connected">
+            <div class="log pad2">"Welcome to Socket.IO Chat – ";</div>
+            <div class="log">{{chatCtrl.number_message}}</div>
+        </div>
+        <div>
+            <ul>
+                <li ng-class="{'message':message.style,'log':!message.style}" ng-repeat="message in chatCtrl.messages">
+                    <span ng-show="message.style" ng-style="{color:message.color}">{{message.username}} : </span>{{message.content}}
+                </li>
+            </ul>
+        </div>
+    </ion-content>
+    <div class="bar bar-footer  item-input-inset">
+        <label class="item-input-wrapper">
+            <input ng-change="chatCtrl.updateTyping()" type="text" placeholder="Message" ng-enter="chatCtrl.sendMessage()" ng-model="chatCtrl.message">
+        </label>
+
+        <button class="button button-clear ion-android-send iconsend" ng-click="chatCtrl.sendMessage()"></button>
+    </div>
 </ion-view>

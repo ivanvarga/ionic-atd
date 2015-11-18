@@ -18,12 +18,12 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item menu-close ng-click="login()">
-          Login
-        </ion-item>
-        <ion-item menu-close href="#/app/search">
-          Q&A<!--Search-->
-        </ion-item>
+          <ion-item menu-close ng-click="login()" ng-hide="connected">
+              Login
+          </ion-item>
+          <ion-item menu-close href="#/app/search/{{nickname}}" ng-show="connected">
+              Q&A <!--Search-->
+          </ion-item>
         <ion-item menu-close href="#/app/browse">
           Start<!--Browse-->
         </ion-item>
