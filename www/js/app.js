@@ -4,10 +4,33 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers'])
+angular.module('starter', ['ionic','ionic.service.core','ionic.service.analytics', 'starter.controllers'])
 
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
+.run(function($ionicPlatform, $ionicAnalytics) {
+    $ionicPlatform.ready(function () {
+        Ionic.io();
+        var push = new Ionic.Push({
+            "debug": true,
+            "onNotification": function (notification) {
+                var payload = notification.payload;
+                console.log(notification, payload);
+            }
+        });
+
+        var user = Ionic.User.current();
+        if (!user.id) {
+            user.id = Ionic.User.anonymousId();
+            // user.id = 'your-custom-user-id';
+        }
+        var callback = function (pushToken) {
+            console.log('Registered token:', pushToken.token);
+            user.addPushToken(pushToken);
+            user.save(); 
+        }
+
+        push.register(callback);
+        
+        $ionicAnalytics.register();
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
       if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
